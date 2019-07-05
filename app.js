@@ -6,13 +6,14 @@ const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 
-var con = mysql.createConnection({
-  host: config.DatabaseConfig.database_name,
+var conn = mysql.createConnection({
+  host: config.DatabaseConfig.database_host,
   user: config.DatabaseConfig.database_user,
-  password: config.DatabaseConfig.database_pass
+  password: config.DatabaseConfig.database_pass,
+  database: config.DatabaseConfig.database_name
 });
 
-con.connect(function(err) {
+conn.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
 });
@@ -29,7 +30,38 @@ app.use(function(req, res, next) {
 
 app.post('/saveData', function(req, res){
     res.send("Server is working");
-    console.dir(req.body);
+    
+    const firstName = req.body.first_name;
+    const lastName = req.body.last_name;
+    const emailId = req.body.email_id;
+    const contactNumber = req.body.contact_num;
+    const areaOfInterest = req.body.area_of_interest;
+
+    const arr = req.body.mode_of_transport;
+    const modeOfTransport = arr.toString(); 
+
+    const message = req.body.message;
+    const blogSub = req.body.blog_subscription;
+    const marketingSub = req.body.marketing_subscription;
+
+    const tableEntry = {
+      firstName,lastName,emailId,contactNumber,areaOfInterest,modeOfTransport,message,blogSub,marketingSub
+    }
+
+
+    conn.query(`INSERT INTO leads_data SET ?`, tableEntry, (err, res) => {
+
+      console.log("Error : "+ err );
+      console.log("Success : "+ res );
+    });
+
+
+
+
+    console.log("Request %j",tableEntry);
+
+    
+
 });
 
 app.listen(3000);
