@@ -48,22 +48,28 @@ app.post('/saveData', function(req, res){
       firstName,lastName,emailId,contactNumber,areaOfInterest,modeOfTransport,message,blogSub,marketingSub
     }
 
-
     conn.query(`INSERT INTO leads_data SET ?`, tableEntry, (err, res) => {
-
       console.log("Error : "+ err );
       console.log("Success : "+ res );
     });
-
-
-
-
-    console.log("Request %j",tableEntry);
-
-    
-
 });
 
+
+app.get('/fetchData', function(req, res){
+  conn.query(`SELECT * FROM leads_data`,function (err, rows, fields) {
+
+    if (err) {
+        res.status(500).send({
+            result: err
+        });
+    }
+    else {
+        res.status(200).send({
+            result: rows
+        });
+    }
+  });
+});
 app.listen(3000);
 
 
