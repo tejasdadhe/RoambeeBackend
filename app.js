@@ -1,14 +1,15 @@
 const mysql = require('mysql');
 
+const config = require('./config')
 
 const bodyParser = require('body-parser')
 const express = require('express');
 const app = express();
 
 var con = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "!0on!0Admin"
+  host: config.DatabaseConfig.database_name,
+  user: config.DatabaseConfig.database_user,
+  password: config.DatabaseConfig.database_pass
 });
 
 con.connect(function(err) {
